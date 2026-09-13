@@ -60,6 +60,12 @@ REPOS = [
 # get every new issue again.
 ONLY_CONTRIBUTOR_LABELS = True
 WANTED_LABELS = {"good first issue", "help wanted"}
+
+# High-priority repos whose every new issue is notified regardless of the
+# label filter above.
+ALL_ISSUES_REPOS = {
+    "vllm-project/llm-compressor",
+}
 # -----------------------------------------------------------------------------
 
 STATE_FILE = "state/last_check.txt"
@@ -122,7 +128,7 @@ def find_new_issues(since):
 
             labels = [label["name"] for label in item.get("labels", [])]
 
-            if ONLY_CONTRIBUTOR_LABELS:
+            if ONLY_CONTRIBUTOR_LABELS and repo not in ALL_ISSUES_REPOS:
                 normalized = {l.lower() for l in labels}
                 if not normalized & WANTED_LABELS:
                     continue
